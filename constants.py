@@ -5,5 +5,5 @@ import os
 
 load_dotenv()
 
-TOKEN: Final[str] = os.getenv("DISCORD_TOKEN")
-# print(TOKEN)
+TOKEN: Final[str] = os.getenv("BOT_TOKEN")
+print(TOKEN)
