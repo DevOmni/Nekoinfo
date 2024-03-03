@@ -1,11 +1,18 @@
-from constants import DEV_SERVERS
+from constants import DEV_SERVERS, ALPHA_TEST_SERVERS
 from time import sleep
 import random
 
 
+PRIOR_SERVERS_ID: list = []
+PRIOR_SERVERS_NAME: list = []
+for s in [DEV_SERVERS, ALPHA_TEST_SERVERS]:
+    PRIOR_SERVERS_ID.extend(s)    
+    PRIOR_SERVERS_NAME.extend(s.values())
+  
+
 def get_response(user_input: str, username: str, server: str, channel: str, server_id: str) -> str:
     lowered: str = user_input.lower()
-    if not server in DEV_SERVERS.values() or not server_id in DEV_SERVERS.keys():
+    if not server in PRIOR_SERVERS_NAME or not server_id in PRIOR_SERVERS_ID:
         return ""
     else:
         if lowered == '':

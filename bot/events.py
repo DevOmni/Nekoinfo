@@ -9,7 +9,7 @@ async def send_message(message: Message, user_message: str) -> None:
         return
 
     try:
-        response: str = get_response(user_message, str(message.author), message.guild.name, str(message.channel))
+        response: str = get_response(user_message, str(message.author), message.guild.name, str(message.channel), message.guild.id)
         if response:
             await message.channel.send(response)
     except Exception as e:
@@ -20,7 +20,7 @@ async def send_message(message: Message, user_message: str) -> None:
 async def on_ready() -> None:
     print(f"\033[96m{bot.user}\033[00m is\033[92m ONLINE! \033[00m")
 
-
+"""
 @bot.event
 async def on_message(message: Message) -> None:
     if message.author == bot.user:
@@ -34,3 +34,10 @@ async def on_message(message: Message) -> None:
 
     print(f'[{server}:{server_id}][{channel}]  {username}: "{user_message}"')
     await send_message(message, user_message)
+"""
+
+
+@bot.command()
+async def info(ctx):
+    return 
+
