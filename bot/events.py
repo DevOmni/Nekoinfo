@@ -32,5 +32,5 @@ async def on_message(message: Message) -> None:
     server: str = str(message.guild.name)
     server_id: str = str(message.guild.id)
 
-    print(f'[{server}][{channel}]  {username}: "{user_message}"')
+    print(f'[{server}:{server_id}][{channel}]  {username}: "{user_message}"')
     await send_message(message, user_message)
