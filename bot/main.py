@@ -11,4 +11,4 @@ from bot.responses import get_response
 # intent.message_content = True  # NOQA <- no quotation (removes sqwigly lines)
 
 intent: Intents = Intents.all()
-bot: commands.Bot  = commands.Bot(command_prefix="~", intents=intent)
+bot: commands.Bot = commands.Bot(command_prefix="~", intents=intent)
