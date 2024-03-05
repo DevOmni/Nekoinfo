@@ -15,4 +15,6 @@ ALPHA_TEST_SERVERS: set = {"00000000000": "nekowebring"}
 
 # Endpoints and urls
 NEKOWEB_INFO_EP = "https://nekoweb.org/api/site/info"
-NEKOWEB_SITE_URL = "https://<site>.nekoweb.org/"
+NEKOWEB_SITE_URL = "https://<site>.nekoweb.org"
+NEKOWEB_SITE_SS = "https://nekoweb.org/screenshots/<site>/index_large.jpg"
+
