@@ -27,8 +27,14 @@ async def send_message(message: Message, user_message: str) -> None:
 @bot.event
 async def on_ready() -> None:
     await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("chipi chipi chapa chapa"))
-    await bot.tree.sync()
+    await bot.tree.sync()  # sync slash commands
     print(f"\033[96m{bot.user}\033[00m is\033[92m ONLINE! \033[00m")
+
+
+@bot.event
+async def on_guild_join(guild):
+    if guild.system_channel: # If it is not None
+        await guild.system_channel.send(f'I\'m here ^-^')
 
 
 """
@@ -88,7 +94,7 @@ async def info(ctx: discord.Integration, username: str):
     print(f"data: {data}")
     
     info_embed = await create_site_profile_embed(data, username, ctx)
-    await ctx.reply(content="~~well~~", embed=info_embed)
+    await ctx.reply(embed=info_embed)
 
 
 @bot.hybrid_command(name="webring", description="indexes the members of webring")
