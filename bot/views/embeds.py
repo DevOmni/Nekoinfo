@@ -13,8 +13,8 @@ def is_url_exists(url: str) -> bool:
 
 async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> Embed:
     embed: Embed = Embed(
-        title=f"Site info of {username}", 
-        description=f"Information of site of {username} on nekoweb", timestamp=datetime.utcnow(), 
+        title=f"{username}", 
+        description=f"site info of {username} on nekoweb", timestamp=datetime.utcnow(), 
         color=discord.Color.dark_green()
     )
 

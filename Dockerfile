@@ -1,12 +1,14 @@
-FROM python:alpine3.11
+FROM python:3.11.8-alpine3.19
 
-COPY . ./nenebot
+WORKDIR /app
 
-WORKDIR /nenebot
+COPY requirements.txt ./
+
+RUN pip3 install --no-cache-dir -r /app/requirements.txt --user
+
+COPY . .
 
 EXPOSE 3000
-
-RUN pip3 install --no-cache-dir -r requirements.txt --user
 
 # CMD ["pip", "install", "-r", "/requirements.txt"]
 

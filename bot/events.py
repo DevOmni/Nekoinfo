@@ -1,13 +1,19 @@
+import enum
 import discord
 from discord import Message, Embed, Color
 from discord.ext import commands
 from discord.ext.commands import Context
-from . import bot
-from .responses import get_response
+from discord import app_commands
+
+from constants import NEKOWEB, NEOCITIES
+from bot import bot
+from bot.responses import get_response
+from bot.utils import get_site_info
+from bot.views.embeds import create_site_profile_embed
+
 import requests
-from constants import NEKOWEB_INFO_EP
-from bot.views.profile import create_site_profile_embed
 from datetime import datetime, timezone
+from typing import Literal, Union, NamedTuple
 
 
 #MESSAGE FUNCTIONALITY
@@ -80,21 +86,29 @@ async def ping(interaction: discord.Integration):
 #     info_embed = await create_site_profile_embed(data, username, ctx)
 #     await ctx.reply(content="~~well~~", embed=info_embed)
 
+class Hosts(enum.Enum):
+    nekoweb = NEKOWEB
+    neocities = NEOCITIES
+    
+
 @bot.hybrid_command(name="info", description="Gives information about the site")
-async def info(ctx: discord.Integration, username: str):
+@app_commands.describe(username="username of the site on the host")
+@app_commands.describe(host="host of user's site")
+async def info(ctx: discord.Integration, username: str, host: Hosts=NEKOWEB):
     await ctx.typing()
     
-    res = requests.get(url=f"{NEKOWEB_INFO_EP}/{username}")
-    print(f"res: {res.status_code}")
+    data, status = get_site_info(username, host)
     
-    if str(res.status_code) != '200' or not len(res.content) > 0:
-        await ctx.reply("This site doesn't exists on nekoweb")
+    if str(status) != '200' or not len(data) > 0:
+        await ctx.reply(f"This site doesn't exists on {host}")
         return
-    data: dict = res.json()
     print(f"data: {data}")
     
     info_embed = await create_site_profile_embed(data, username, ctx)
-    await ctx.reply(embed=info_embed)
+    
+    url_view = discord.ui.View()
+    url_view.add_item(discord.ui.Button(label='Visit', style=discord.ButtonStyle.url, url=f"https://{username}.nekoweb.org/"))
+    await ctx.reply(embed=info_embed, view=url_view)
 
 
 @bot.hybrid_command(name="webring", description="indexes the members of webring")
