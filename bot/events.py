@@ -32,7 +32,7 @@ async def send_message(message: Message, user_message: str) -> None:
 
 @bot.event
 async def on_ready() -> None:
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("chipi chipi chapa chapa"))
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("baraf kaa paani"))
     await bot.tree.sync()  # sync slash commands
     print(f"\033[96m{bot.user}\033[00m is\033[92m ONLINE! \033[00m")
 
@@ -69,6 +69,11 @@ async def on_message(message: Message) -> None:
 async def ping(interaction: discord.Integration):
     await interaction.reply(content=f"Pong! {round(bot.latency * 1000)}ms")
 
+@bot.hybrid_command(name="sync", description="syncs the slash commands", aliases=['s'])
+async def sync(interaction: discord.Integration):
+    await bot.tree.sync()  # sync slash commands
+    await interaction.reply(content=f"Synced! {round(bot.latency * 1000)}ms")
+
 
 # @bot.command()
 # async def info(ctx: Context, username: str):
@@ -92,13 +97,11 @@ class Hosts(enum.Enum):
     
 
 @bot.hybrid_command(name="info", description="Gives information about the site")
-@app_commands.describe(username="username of the site on the host")
-@app_commands.describe(host="host of user's site")
-async def info(ctx: discord.Integration, username: str, host: Hosts=NEKOWEB):
+@app_commands.describe(username="username of the site on the host", host="host of user's site")
+async def info(ctx: discord.Integration, username: str, host: Literal[NEKOWEB, NEOCITIES]=NEKOWEB):
     await ctx.typing()
-    
+    print(str(host))
     data, status = get_site_info(username, host)
-    
     if str(status) != '200' or not len(data) > 0:
         await ctx.reply(f"This site doesn't exists on {host}")
         return
@@ -109,6 +112,20 @@ async def info(ctx: discord.Integration, username: str, host: Hosts=NEKOWEB):
     url_view = discord.ui.View()
     url_view.add_item(discord.ui.Button(label='Visit', style=discord.ButtonStyle.url, url=f"https://{username}.nekoweb.org/"))
     await ctx.reply(embed=info_embed, view=url_view)
+
+
+# THIS WORKED!
+# var1, var2 = 'yoda', 'sanji'
+# @bot.hybrid_command(name="user", description="chose user")
+# @app_commands.describe(username="username")
+# # @app_commands.choices(username=[
+# #     app_commands.Choice(name='yoda', value=var1),
+# #     app_commands.Choice(name='sanji', value=var2)
+# # ])
+# async def user(ctx: discord.Integration, username: Literal[var1, var2]=var1):  # app_commands.Choice[str]
+#     await ctx.typing()
+#     print(str(username))
+#     await ctx.reply(f"{username}")
 
 
 @bot.hybrid_command(name="webring", description="indexes the members of webring")
