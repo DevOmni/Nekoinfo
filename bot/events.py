@@ -8,7 +8,7 @@ from discord import app_commands
 from constants import NEKOWEB, NEOCITIES
 from bot import bot
 from bot.responses import get_response
-from bot.utils import get_site_info
+from bot.utils import get_site_info, get_config, is_url_exists
 from bot.views.embeds import create_site_profile_embed
 
 import requests
@@ -75,6 +75,10 @@ async def sync(interaction: discord.Integration):
     await interaction.reply(content=f"Synced! {round(bot.latency * 1000)}ms")
 
 
+@bot.hybrid_command(name="cfg", description="shows config")
+async def cfg(interaction: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):
+    await interaction.reply(content=f"## Config: \n```json\n{get_site_info(username, host)}\n```")
+
 # @bot.command()
 # async def info(ctx: Context, username: str):
 #     await ctx.typing()
@@ -98,7 +102,7 @@ class Hosts(enum.Enum):
 
 @bot.hybrid_command(name="info", description="Gives information about the site")
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
-async def info(ctx: discord.Integration, username: str, host: Literal[NEKOWEB, NEOCITIES]=NEKOWEB):
+async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):  # NOQA
     await ctx.typing()
     print(str(host))
     data, status = get_site_info(username, host)
