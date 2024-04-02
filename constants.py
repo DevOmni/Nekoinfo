@@ -32,3 +32,45 @@ NENE_CONFIG_ALLOWED_PARAMS = [
     "title", "note", "color", "description", 
     "thumbnail", "tags", "webrings",
 ]
+
+ALL_FIELDS = [
+"id",
+"username",
+"title",
+"description", 
+"note", 
+"followers",
+"views",
+"hits",
+"domain",
+"updates",
+"created_at",
+"updated_at",
+"color", 
+"tags", 
+"webrings",
+"thumbnail", 
+]
+
+ALL_FIELDS_AS_VALUES = [
+"id",
+"username",
+"title",
+"description", 
+"note", 
+
+"followers",
+"views",
+"hits",
+"domain",
+
+"updates",
+"created_at",
+"updated_at",
+"thumbnail",
+]
+
+ALL_LIST_VALUED_FIELDS = [ 
+"tags", 
+"webrings",
+]
