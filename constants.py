@@ -23,4 +23,12 @@ NEKOWEB_SITE_URL = "https://<site>.nekoweb.org"
 NEKOWEB_SITE_SS = "https://nekoweb.org/screenshots/<site>/index_large.jpg"
 
 NEOCITIES_INFO_EP = "https://neocities.org/api/info?sitename=<uname>"
-NEKOWEB_SITE_URL = "https://<site>.neocities.org"
+NEOCITIES_SITE_URL = "https://<site>.neocities.org"
+
+
+# NENE
+NENE_CONFIG_PATH = 'configs/nene.json'
+NENE_CONFIG_ALLOWED_PARAMS = [
+    "title", "note", "color", "description", 
+    "thumbnail", "tags", "webrings",
+]
