@@ -25,12 +25,10 @@ def get_config(username: str, host: str) -> dict:
     return config
 
 
-def get_site_info(username: str, host: str) -> tuple[str|int, str]:
-    print(NEKOWEB, NEOCITIES, host)
+def get_site_info(username: str, host: str) -> tuple[dict|str, str|int]:
     url = f"{NEKOWEB_INFO_EP if host == NEKOWEB else NEOCITIES_INFO_EP}".replace("<uname>", username)
-    print(url)
+    # print(url)
     res = requests.get(url=url)
-    print(res.content)
     status = res.status_code
     if not res.ok:
         return res.content(), status
@@ -55,7 +53,7 @@ def get_site_info(username: str, host: str) -> tuple[str|int, str]:
         data['host'] = NEKOWEB
     
     data.update(get_config(username=username, host=host))   
-    print(data)
+    # print(data)
     return data, status
 
 
