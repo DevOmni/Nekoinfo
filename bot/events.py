@@ -9,7 +9,7 @@ from constants import NEKOWEB, NEOCITIES
 from bot import bot
 from bot.responses import get_response
 from bot.utils import get_site_info, get_config, is_url_exists
-from bot.views.embeds import create_site_profile_embed, create_site_profile_embed_dynamic
+from bot.views.embeds import create_site_profile_embed, create_site_profile_embed_dynamic, create_webring_index_embed
 
 import requests
 from datetime import datetime, timezone
@@ -60,14 +60,18 @@ async def on_message(message: Message) -> None:
 """
 
 
-# @bot.command()
-# async def ping(ctx: Context):
-#     await ctx.reply(f"pong {round(bot.latency * 1000)}ms")
-
+@bot.command()
+async def leave(ctx: Context):
+    if not ctx.author.display_name in ["~", "max", "null"]:
+        await ctx.reply("You don't have permission to do that!") 
+    await ctx.reply("see ya ~")
+    await ctx.guild.leave()
+    
 
 @bot.hybrid_command(name="ping", description="pongs back when pinged")
 async def ping(interaction: discord.Integration):
     await interaction.reply(content=f"Pong! {round(bot.latency * 1000)}ms")
+
 
 @bot.hybrid_command(name="sync", description="syncs the slash commands", aliases=['s'])
 async def sync(interaction: discord.Integration):
@@ -79,6 +83,20 @@ async def sync(interaction: discord.Integration):
 async def cfg(interaction: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):
     await interaction.reply(content=f"## Config: \n```json\n{get_site_info(username, host)}\n```")
  
+
+@bot.hybrid_command(name="wring", description="indexes the members of webring")
+async def wring(interaction: discord.Integration, webring: str):
+    embed = await create_webring_index_embed()
+    await interaction.reply(Embed=embed)
+    print(webring)
+    await interaction.reply(content="not implemented yet :/")
+
+
+@bot.hybrid_command(name="join-date", description="shows the join date of the server member")
+async def join_date(interaction: discord.Interaction, member: discord.Member):
+    # The format_dt function formats the date time into a human readable representation in the official client
+    await interaction.reply(f'{member} joined at {discord.utils.format_dt(member.joined_at)}')
+
 
 @bot.hybrid_command(name="info", description="Gives information about the site")
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
@@ -112,25 +130,9 @@ async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB
 #     await ctx.reply(f"{username}")
 
 
-@bot.hybrid_command(name="wring", description="indexes the members of webring")
-async def wring(interaction: discord.Integration, webring: str):
-    # embed = await create_webring_index_embed()
-    # await interaction.reply(Embed=embed)
-    print(webring)
-    await interaction.reply(content="not implemented yet :/")
+# TODO: implement help command
+# @bot.help_command()
 
-
-@bot.command()
-async def leave(ctx: Context):
-    if not ctx.author.display_name in ["~", "max", "null"]:
-        await ctx.reply("You don't have permission to do that!") 
-    await ctx.reply("see ya ~")
-    await ctx.guild.leave()
-
-
-@bot.hybrid_command(name="join-date", description="shows the join date of the server member")
-async def join_date(interaction: discord.Interaction, member: discord.Member):
-    # The format_dt function formats the date time into a human readable representation in the official client
-    await interaction.reply(f'{member} joined at {discord.utils.format_dt(member.joined_at)}')
-    # await interaction.response.send_message(f'{member} joined at {discord.utils.format_dt(member.joined_at)}')
-
+# @bot.hybrid_command(name="info", description="Gives information about the site")
+# @app_commands.describe(username="username of the site on the host", host="host of user's site")
+# async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB, func=True): 

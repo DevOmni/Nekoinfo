@@ -2,11 +2,10 @@ import discord
 from discord import Message, Embed, Color
 from discord.ext.commands import Context
 
-from constants import NEKOWEB_INFO_EP, NEKOWEB_SITE_URL, NEKOWEB_SITE_SS, FIELD_MAP, ALL_LIST_VALUED_FIELDS, NEKOWEB, NEOCITIES
+from constants import NEKOWEB_SITE_SS, FIELD_MAP, NEKOWEB, NEOCITIES
 from bot.utils import is_url_exists
 
 from datetime import datetime, timezone
-import requests
 
 
 # TODO: use dictionary to get embed value and opts from name for ex: "id or username or title" as key
@@ -18,6 +17,7 @@ import requests
 # FIELD_MAP
 
 
+# CREATE AND GET HARD CODED SITE INFO EMBED
 async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> Embed:
     embed: Embed = Embed(
         title=f"{username}", 
@@ -47,6 +47,8 @@ async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> 
     
     return embed
 
+
+# GET DYNAMIC SITE INFO EMBED
 async def create_site_profile_embed_dynamic(data: dict, username: str, ctx: Context) -> Embed:
     print('dynamic info embed')
     embed: Embed = Embed(
@@ -81,6 +83,8 @@ async def create_site_profile_embed_dynamic(data: dict, username: str, ctx: Cont
     return embed
 
 
+# TODO: create index of webrings registered on nene and index of members in the webrings
+# CREATE INDEX OF ALL MEMBERS IN REGISTERED WEBRINGS
 async def create_webring_index_embed(data: dict, webring: str, ctx: Context) -> Embed:
     embed: Embed = Embed(
         title=f"Members index of {webring}", 
@@ -88,4 +92,3 @@ async def create_webring_index_embed(data: dict, webring: str, ctx: Context) -> 
         color=discord.Color.dark_blue()
     )
     
-    # TODO: complete this functionality
