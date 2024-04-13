@@ -20,10 +20,15 @@ def get_config(username: str, host: str) -> dict:
         return config
     # print(config_path)
     
-    resp: dict = requests.get(config_path, allow_redirects=True).json()
+    try:
+        resp: dict = requests.get(config_path, allow_redirects=True).json()
+    except Exception as e:
+        print('error occurred while parsing config json:', e)
+        return config
+    else:
+        config = {key:val for key, val in resp.items() if key in NENE_CONFIG_ALLOWED_PARAMS}
     # print(resp)
   
-    config.update({key:val for key, val in resp.items() if key in NENE_CONFIG_ALLOWED_PARAMS})
     # print(config)      
     return config
 

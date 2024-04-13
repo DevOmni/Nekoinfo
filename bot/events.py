@@ -5,7 +5,11 @@ from discord.ext import commands
 from discord.ext.commands import Context
 from discord import app_commands
 
-from constants import NEKOWEB, NEOCITIES
+# this bit is a hack for the current situation of `HelpCommand.context` being a ContextVar
+# from discord.ext.commands.help import _context as HELP_COMMAND_CONTEXT_HACK
+# end hack
+
+from constants import NEKOWEB, NEOCITIES, DEFAULT_USAGE
 from bot import bot
 from bot.responses import get_response
 from bot.utils import get_site_info, get_config, is_url_exists
@@ -14,6 +18,24 @@ from bot.views.embeds import create_site_profile_embed, create_site_profile_embe
 import requests
 from datetime import datetime, timezone
 from typing import Literal, Union, NamedTuple
+
+import os
+print('current dir:', os.getcwd())
+
+
+# class Usage(commands.Cog):
+#     def __init__(self, bot) -> None:
+#         self.bot = bot    
+            
+@bot.hybrid_command(name="help", description="Outputs usage of this bot's commands")
+async def help( ctx: discord.Integration):
+    with open('./bot/resources/markdown/help.md', 'r') as help_md:
+        USAGE_CONTENT = help_md.read()
+        help_md.close()
+        # print(USAGE_CONTENT)
+        # USAGE_CONTENT = DEFAULT_USAGE
+        # print(USAGE_CONTENT)
+    await ctx.reply(USAGE_CONTENT)
 
 
 #MESSAGE FUNCTIONALITY
@@ -32,8 +54,9 @@ async def send_message(message: Message, user_message: str) -> None:
 
 @bot.event
 async def on_ready() -> None:
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Game("FINDING ONE PIECE"))
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(application_id=bot.application_id, type=discord.ActivityType.custom, name=""))  # discord.Game("FINDING ONE PIECE")
     await bot.tree.sync()  # sync slash commands
+    # await bot.add_cog(Usage(bot=bot))
     print(f"\033[96m{bot.user}\033[00m is\033[92m ONLINE! \033[00m")
 
 
@@ -113,6 +136,7 @@ async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB
     
     url_view = discord.ui.View()
     url_view.add_item(discord.ui.Button(label='Visit', style=discord.ButtonStyle.url, url=f"https://{username}.{host}.org/"))
+    url_view.add_item(discord.ui.Button(label='Report', style=discord.ButtonStyle.danger, url=f"https://{username}.{host}.org/"))
     await ctx.reply(embed=info_embed, view=url_view)
 
 
@@ -130,9 +154,32 @@ async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB
 #     await ctx.reply(f"{username}")
 
 
-# TODO: implement help command
-# @bot.help_command()
+# --TODO: implement help command
+# class Usage(commands.DefaultHelpCommand):
 
-# @bot.hybrid_command(name="info", description="Gives information about the site")
-# @app_commands.describe(username="username of the site on the host", host="host of user's site")
-# async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB, func=True): 
+#     def load(self, bot: commands.Bot):
+#         """Helper method for backing up the original help command and adding this one."""
+#         self._original_help_command = bot.help_command
+#         bot.help_command = self
+
+#     def unload(self, bot: commands.Bot):
+#         """Helper method for restoring the original help command."""
+#         bot.help_command = self._original_help_command
+        
+#     async def send_bot_help(self, mapping):
+#         # `mapping` is a dict of the bot's cogs, which map to their commands
+#         # embed = Embed(title="Bot help")
+#         # channel = self.get_destination()  # this method is inherited from `HelpCommand`, and gets the channel in context
+#         # await channel.send(embed=embed)
+        
+#         ctx = self.context
+#         with open('./resources/markdown/help.md', 'r') as help_md:
+#             USAGE_CONTENT = help_md.read()
+#             help_md.close()
+#             print(USAGE_CONTENT)
+#             # USAGE_CONTENT = DEFAULT_USAGE
+#             # print(USAGE_CONTENT)
+#         await ctx.reply(USAGE_CONTENT)
+
+
+# Usage(command_attrs=dict(hidden=True)).load(bot)

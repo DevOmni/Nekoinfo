@@ -12,3 +12,5 @@ from bot.responses import get_response
 
 intent: Intents = Intents.all()
 bot: commands.Bot = commands.Bot(command_prefix="~", intents=intent)
+
+bot.remove_command('help')

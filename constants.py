@@ -5,6 +5,18 @@ import os
 
 load_dotenv()
 
+DEFAULT_USAGE = """
+# HELLP :]
+
+```holymd
+Usage: /<command> <args>
+
+    info: 
+        outputs information of sites which are hosted on nekoweb or neocities with help of there username on the host
+        example: /info username ?host
+```    
+"""
+
 
 TOKEN: Final[str] = os.getenv("BOT_TOKEN")
     # print(TOKEN)
