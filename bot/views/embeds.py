@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 
 
 # CREATE AND GET HARD CODED SITE INFO EMBED
+# DEPRECATED!
 async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> Embed:
     embed: Embed = Embed(
         title=f"{username}", 
@@ -85,10 +86,12 @@ async def create_site_profile_embed_dynamic(data: dict, username: str, ctx: Cont
 
 # TODO: create index of webrings registered on nene and index of members in the webrings
 # CREATE INDEX OF ALL MEMBERS IN REGISTERED WEBRINGS
-async def create_webring_index_embed(data: dict, webring: str, ctx: Context) -> Embed:
+async def create_webring_index_embed(webring: str, ctx: Context) -> Embed:
     embed: Embed = Embed(
-        title=f"Members index of {webring}", 
-        description=f"Index of members of {webring}", timestamp=datetime.utcnow(), 
+        title=f"Member index of {webring} (WIP ~)", 
+        # description=f"Index`` of members of {webring}", 
+        # timestamp=datetime.utcnow(), 
         color=discord.Color.dark_blue()
     )
+    return embed
     

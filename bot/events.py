@@ -19,23 +19,12 @@ import requests
 from datetime import datetime, timezone
 from typing import Literal, Union, NamedTuple
 
-import os
-print('current dir:', os.getcwd())
 
-
-# class Usage(commands.Cog):
-#     def __init__(self, bot) -> None:
-#         self.bot = bot    
-            
-@bot.hybrid_command(name="help", description="Outputs usage of this bot's commands")
-async def help( ctx: discord.Integration):
-    with open('./bot/resources/markdown/help.md', 'r') as help_md:
-        USAGE_CONTENT = help_md.read()
-        help_md.close()
-        # print(USAGE_CONTENT)
-        # USAGE_CONTENT = DEFAULT_USAGE
-        # print(USAGE_CONTENT)
-    await ctx.reply(USAGE_CONTENT)
+def is_me():
+    def predicate(ctx):
+        # print(ctx.author.id)
+        return ctx.author.id in [1189802691484983339, 549907435478056971]
+    return commands.check(predicate)
 
 
 #MESSAGE FUNCTIONALITY
@@ -83,36 +72,38 @@ async def on_message(message: Message) -> None:
 """
 
 
-@bot.command()
-async def leave(ctx: Context):
-    if not ctx.author.display_name in ["~", "max", "null"]:
-        await ctx.reply("You don't have permission to do that!") 
-    await ctx.reply("see ya ~")
-    await ctx.guild.leave()
-    
-
 @bot.hybrid_command(name="ping", description="pongs back when pinged")
 async def ping(interaction: discord.Integration):
     await interaction.reply(content=f"Pong! {round(bot.latency * 1000)}ms")
 
 
-@bot.hybrid_command(name="sync", description="syncs the slash commands", aliases=['s'])
+@bot.command(hidden=True)
+@is_me()
+async def leave(ctx: Context):
+    await ctx.reply("see ya ~")
+    await ctx.guild.leave()
+
+
+@bot.command(name="sync", description="syncs the slash commands", aliases=['s'], hidden=True)
+@is_me()
 async def sync(interaction: discord.Integration):
     await bot.tree.sync()  # sync slash commands
     await interaction.reply(content=f"Synced! {round(bot.latency * 1000)}ms")
 
 
-@bot.hybrid_command(name="cfg", description="shows config")
+@bot.command(name="cfg", description="shows config", hidden=True)
+@is_me()
 async def cfg(interaction: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):
     await interaction.reply(content=f"## Config: \n```json\n{get_site_info(username, host)}\n```")
  
+ 
 
-@bot.hybrid_command(name="wring", description="indexes the members of webring")
+@bot.hybrid_command(name="wring", description="indexes the members of webring", enabled=True)
 async def wring(interaction: discord.Integration, webring: str):
-    embed = await create_webring_index_embed()
-    await interaction.reply(Embed=embed)
     print(webring)
-    await interaction.reply(content="not implemented yet :/")
+    embed = await create_webring_index_embed(webring=webring, ctx=interaction)
+    await interaction.reply(embed=embed)
+    # await interaction.reply(content="not implemented yet :/")
 
 
 @bot.hybrid_command(name="join-date", description="shows the join date of the server member")
@@ -123,7 +114,7 @@ async def join_date(interaction: discord.Interaction, member: discord.Member):
 
 @bot.hybrid_command(name="info", description="Gives information about the site")
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
-async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB, func=True):  # NOQA
+async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):  # NOQA
     await ctx.typing()
     print(str(host))
     data, status = get_site_info(username, host)
@@ -132,54 +123,18 @@ async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB
         return
     print(f"data: {data}")
     
-    info_embed = await (create_site_profile_embed(data, username, ctx) if func else create_site_profile_embed_dynamic(data, username, ctx))
+    info_embed = await create_site_profile_embed_dynamic(data, username, ctx)
     
     url_view = discord.ui.View()
     url_view.add_item(discord.ui.Button(label='Visit', style=discord.ButtonStyle.url, url=f"https://{username}.{host}.org/"))
-    url_view.add_item(discord.ui.Button(label='Report', style=discord.ButtonStyle.danger, url=f"https://{username}.{host}.org/"))
+    url_view.add_item(discord.ui.Button(label='Report', style=discord.ButtonStyle.danger))
     await ctx.reply(embed=info_embed, view=url_view)
 
 
-# THIS WORKED!
-# var1, var2 = 'yoda', 'sanji'
-# @bot.hybrid_command(name="user", description="chose user")
-# @app_commands.describe(username="username")
-# # @app_commands.choices(username=[
-# #     app_commands.Choice(name='yoda', value=var1),
-# #     app_commands.Choice(name='sanji', value=var2)
-# # ])
-# async def user(ctx: discord.Integration, username: Literal[var1, var2]=var1):  # app_commands.Choice[str]
-#     await ctx.typing()
-#     print(str(username))
-#     await ctx.reply(f"{username}")
-
-
-# --TODO: implement help command
-# class Usage(commands.DefaultHelpCommand):
-
-#     def load(self, bot: commands.Bot):
-#         """Helper method for backing up the original help command and adding this one."""
-#         self._original_help_command = bot.help_command
-#         bot.help_command = self
-
-#     def unload(self, bot: commands.Bot):
-#         """Helper method for restoring the original help command."""
-#         bot.help_command = self._original_help_command
-        
-#     async def send_bot_help(self, mapping):
-#         # `mapping` is a dict of the bot's cogs, which map to their commands
-#         # embed = Embed(title="Bot help")
-#         # channel = self.get_destination()  # this method is inherited from `HelpCommand`, and gets the channel in context
-#         # await channel.send(embed=embed)
-        
-#         ctx = self.context
-#         with open('./resources/markdown/help.md', 'r') as help_md:
-#             USAGE_CONTENT = help_md.read()
-#             help_md.close()
-#             print(USAGE_CONTENT)
-#             # USAGE_CONTENT = DEFAULT_USAGE
-#             # print(USAGE_CONTENT)
-#         await ctx.reply(USAGE_CONTENT)
-
-
-# Usage(command_attrs=dict(hidden=True)).load(bot)
+@bot.hybrid_command(name="help", description="Outputs usage of this bot's commands")
+async def help( ctx: discord.Integration):
+    with open('./bot/resources/markdown/help.md', 'r') as help_md:
+        USAGE_CONTENT = help_md.read()
+        help_md.close()
+    await ctx.reply(USAGE_CONTENT)
+    
