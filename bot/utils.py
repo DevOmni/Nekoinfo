@@ -40,7 +40,7 @@ def get_site_info(username: str, host: str) -> tuple[dict|str, str|int]:
     res = requests.get(url=url)
     status = res.status_code
     if not res.ok:
-        return res.content(), status
+        return res.content, status
     
     data = res.json()  
     
