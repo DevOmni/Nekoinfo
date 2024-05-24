@@ -10,7 +10,7 @@ from discord import app_commands
 # end hack
 
 from constants import NEKOWEB, NEOCITIES, USAGE_CONTENT
-from bot import bot
+from bot import bot, logger
 from bot.responses import get_response
 from bot.utils import get_site_info, get_config, is_url_exists
 from bot.views.embeds import create_site_profile_embed, create_site_profile_embed_dynamic, create_webring_index_embed
@@ -116,7 +116,9 @@ async def join_date(interaction: discord.Interaction, member: discord.Member):
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
 async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):  # NOQA
     await ctx.typing()
-    # print(str(host))
+    print(log_msg := f"[{ctx.guild.name}|{ctx.channel.name}]  {ctx.author.name}: uname[{username}], host[{str(host)}]")
+    logger.debug(log_msg)
+    
     data, status = get_site_info(username, host)
     if str(status) != '200' or not len(data) > 0:
         await ctx.reply(f"## This site doesn't exists on {host}")

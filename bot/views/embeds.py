@@ -51,7 +51,7 @@ async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> 
 
 # GET DYNAMIC SITE INFO EMBED
 async def create_site_profile_embed_dynamic(data: dict, username: str, ctx: Context) -> Embed:
-    print('dynamic info embed')
+    # print('dynamic info embed')
     embed: Embed = Embed(
         title=f"{username}", 
         description=f"site info of {username} on {data['host']}", 
