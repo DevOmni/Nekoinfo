@@ -26,7 +26,7 @@ async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> 
         color=Color.from_str('#0000FF')
     )
 
-    print('embed color:', discord.Color.blue)
+    # print('embed color:', discord.Color.blue)
 
     embed.set_image(url=NEKOWEB_SITE_SS.replace("<site>", username))
     
@@ -75,7 +75,7 @@ async def create_site_profile_embed_dynamic(data: dict, username: str, ctx: Cont
                 **field_dict['kwargs']
             )
         elif 'type' in field_dict and field_dict['type'] == 'list' and len(data[field]) > 0:
-            print(data[field])
+            # print(data[field])
             embed.add_field(value=f"{', '.join(data[field])}", **field_dict['kwargs'])
         elif data[field]: 
             embed.add_field(value=f"{data[field]}", **field_dict['kwargs'])

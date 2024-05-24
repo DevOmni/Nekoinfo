@@ -10,4 +10,8 @@ Usage: /<command> <args>
     join_date:
         outputs the date when a discord user joined in this server
         example: /join_date username
+
+Note:
+    The path of nene config should be strictly "https://yoursite.tld/configs/nene.json" from root of your site.
+    example config json file at <https://nullcell.neocities.org/configs/nene.json>
 ```

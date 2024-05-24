@@ -5,6 +5,7 @@ import os
 
 load_dotenv()
 
+USAGE_CONTENT:str = ""
 DEFAULT_USAGE = """
 # HELLP :]
 
@@ -16,6 +17,12 @@ Usage: /<command> <args>
         example: /info username ?host
 ```    
 """
+try:
+    with open('./bot/resources/markdown/help.md', 'r') as help_md:
+        USAGE_CONTENT = help_md.read()
+        help_md.close()
+except Exception as e:
+    USAGE_CONTENT = DEFAULT_USAGE
 
 
 TOKEN: Final[str] = os.getenv("BOT_TOKEN")

@@ -9,7 +9,7 @@ from discord import app_commands
 # from discord.ext.commands.help import _context as HELP_COMMAND_CONTEXT_HACK
 # end hack
 
-from constants import NEKOWEB, NEOCITIES, DEFAULT_USAGE
+from constants import NEKOWEB, NEOCITIES, USAGE_CONTENT
 from bot import bot
 from bot.responses import get_response
 from bot.utils import get_site_info, get_config, is_url_exists
@@ -43,7 +43,7 @@ async def send_message(message: Message, user_message: str) -> None:
 
 @bot.event
 async def on_ready() -> None:
-    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(application_id=bot.application_id, type=discord.ActivityType.custom, name=""))  # discord.Game("FINDING ONE PIECE")
+    await bot.change_presence(status=discord.Status.dnd, activity=discord.Activity(application_id=bot.application_id, type=discord.ActivityType.playing, name="Dead"))  # discord.Game("FINDING ONE PIECE")
     await bot.tree.sync()  # sync slash commands
     # await bot.add_cog(Usage(bot=bot))
     print(f"\033[96m{bot.user}\033[00m is\033[92m ONLINE! \033[00m")
@@ -100,7 +100,7 @@ async def cfg(interaction: discord.Integration, username: str, host: Literal[f'{
 
 @bot.hybrid_command(name="wring", description="indexes the members of webring", enabled=True)
 async def wring(interaction: discord.Integration, webring: str):
-    print(webring)
+    # print(webring)
     embed = await create_webring_index_embed(webring=webring, ctx=interaction)
     await interaction.reply(embed=embed)
     # await interaction.reply(content="not implemented yet :/")
@@ -116,12 +116,12 @@ async def join_date(interaction: discord.Interaction, member: discord.Member):
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
 async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):  # NOQA
     await ctx.typing()
-    print(str(host))
+    # print(str(host))
     data, status = get_site_info(username, host)
     if str(status) != '200' or not len(data) > 0:
         await ctx.reply(f"## This site doesn't exists on {host}")
         return
-    print(f"data: {data}")
+    # print(f"data: {data}")
     
     info_embed = await create_site_profile_embed_dynamic(data, username, ctx)
     
@@ -133,8 +133,5 @@ async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB
 
 @bot.hybrid_command(name="help", description="Outputs usage of this bot's commands")
 async def help( ctx: discord.Integration):
-    with open('./bot/resources/markdown/help.md', 'r') as help_md:
-        USAGE_CONTENT = help_md.read()
-        help_md.close()
     await ctx.reply(USAGE_CONTENT)
     
