@@ -1,6 +1,9 @@
 import logging
 import logging.handlers
+import time
 
+
+logging.Formatter.converter = time.gmtime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

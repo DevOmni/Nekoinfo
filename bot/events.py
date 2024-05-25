@@ -15,7 +15,7 @@ from bot.responses import get_response
 from bot.utils import get_site_info, get_config, is_url_exists
 from bot.views.embeds import create_site_profile_embed, create_site_profile_embed_dynamic, create_webring_index_embed
 
-import requests
+
 from datetime import datetime, timezone
 from typing import Literal, Union, NamedTuple
 
@@ -116,13 +116,15 @@ async def join_date(interaction: discord.Interaction, member: discord.Member):
 @app_commands.describe(username="username of the site on the host", host="host of user's site")
 async def info(ctx: discord.Integration, username: str, host: Literal[f'{NEKOWEB}', f'{NEOCITIES}']=NEKOWEB):  # NOQA
     await ctx.typing()
-    print(log_msg := f"[{ctx.guild.name}|{ctx.channel.name}]  {ctx.author.name}: uname[{username}], host[{str(host)}]")
-    logger.debug(log_msg)
     
     data, status = get_site_info(username, host)
     if str(status) != '200' or not len(data) > 0:
         await ctx.reply(f"## This site doesn't exists on {host}")
+        print(log_msg := f"[{ctx.guild.name}|{ctx.channel.name}]  {ctx.author.name}: uname[{username}], host[{str(host)}]  SITE NOT FOUND")
+        logger.debug(log_msg)
         return
+    print(log_msg := f"[{ctx.guild.name}|{ctx.channel.name}]  {ctx.author.name}: uname[{username}], host[{str(host)}]")
+    logger.debug(log_msg)
     # print(f"data: {data}")
     
     info_embed = await create_site_profile_embed_dynamic(data, username, ctx)

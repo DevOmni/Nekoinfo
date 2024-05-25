@@ -12,6 +12,6 @@ Usage: /<command> <args>
         example: /join_date username
 
 Note:
-    The path of nene config should be strictly "https://yoursite.tld/configs/nene.json" from root of your site.
+    The path of nene config should be strictly "https://yoursite.tld/configs/nene.json".
     example config json file at <https://nullcell.neocities.org/configs/nene.json>
 ```

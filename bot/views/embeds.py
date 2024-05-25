@@ -8,15 +8,6 @@ from bot.utils import is_url_exists
 from datetime import datetime, timezone
 
 
-# TODO: use dictionary to get embed value and opts from name for ex: "id or username or title" as key
-# field_map_key: {name: 'lol', inline: True/False}
-# curf = field_map['field_map_key']
-# embed.add_field(name=curf['name'], value=f"{data['key']}", inline=curf['inline'])
-
-# THIS DICTS KEYS ARE SEQUENCE SENSITIVE
-# FIELD_MAP
-
-
 # CREATE AND GET HARD CODED SITE INFO EMBED
 # DEPRECATED!
 async def create_site_profile_embed(data: dict, username: str, ctx: Context) -> Embed:
